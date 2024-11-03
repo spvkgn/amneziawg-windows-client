@@ -96,11 +96,11 @@ func (s *ManagerService) Start(tunnelName string) error {
 	tt := make([]string, 0, len(trackedTunnels))
 	var inTransition string
 	for t, state := range trackedTunnels {
-		/*c2, err := conf.LoadFromName(t)
+		c2, err := conf.LoadFromName(t)
 		if err != nil || !c.IntersectsWith(c2) {
 			// If we can't get the config, assume it doesn't intersect.
 			continue
-		}*/
+		}
 		tt = append(tt, t)
 		if len(t) > 0 && (state == TunnelStarting || state == TunnelUnknown) {
 			inTransition = t

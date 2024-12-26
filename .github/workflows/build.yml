@@ -1,0 +1,58 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  pre:
+    runs-on: ubuntu-latest
+    outputs:
+      ref: ${{ steps.gh.outputs.ref }}
+    steps:
+      - name: GH
+        id: gh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "REF=$(gh api repos/$GITHUB_REPOSITORY/tags | jq -r '.[0].name')" >> $GITHUB_OUTPUT
+
+  build:
+    needs: pre
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # - name: Add Win10 SDK to PATH
+      #   run: Add-Content $env:GITHUB_PATH "C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64"
+
+      - name: Build
+        shell: cmd
+        run: build
+
+      - name: Create msi
+        shell: cmd
+        run: |
+          cd installer
+          build
+
+      - name: Prepare assets
+        run: |
+          foreach ($i in @('x86', 'amd64', 'arm64')) {
+            7z.exe a -tzip amneziawg-$i.zip .\$i\amneziawg.exe .\installer\dist\amneziawg-$i-*.msi
+          }
+
+      - name: Upload assets to release
+        uses: softprops/action-gh-release@v2
+        with:
+          fail_on_unmatched_files: true
+          prerelease: false
+          draft: false
+          tag_name: ${{ needs.pre.outputs.ref }}-win7
+          name: ${{ needs.pre.outputs.ref }}-win7
+          target_commitish: ${{ github.ref }}
+          body: |
+            amneziawg ${{ needs.pre.outputs.ref }} compatible with Windows 7
+          files: amneziawg-*.zip

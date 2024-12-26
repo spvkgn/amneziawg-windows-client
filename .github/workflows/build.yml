@@ -2,7 +2,7 @@ name: Build and Release
 
 on:
   workflow_dispatch:
-  push:
+  # push:
 
 jobs:
   pre:
@@ -29,19 +29,15 @@ jobs:
       #   run: Add-Content $env:GITHUB_PATH "C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64"
 
       - name: Build
-        shell: cmd
-        run: build
+        run: cmd /c build.bat
 
       - name: Create msi
-        shell: cmd
-        run: |
-          cd installer
-          build
+        run: cmd /c installer\build.bat
 
       - name: Prepare assets
         run: |
           foreach ($i in @('x86', 'amd64', 'arm64')) {
-            7z.exe a -tzip amneziawg-$i.zip .\$i\amneziawg.exe .\installer\dist\amneziawg-$i-*.msi
+            7z a -tzip amneziawg-$i.zip .\$i\amneziawg.exe .\installer\dist\amneziawg-$i-*.msi
           }
 
       - name: Upload assets to release
@@ -50,8 +46,8 @@ jobs:
           fail_on_unmatched_files: true
           prerelease: false
           draft: false
-          tag_name: ${{ needs.pre.outputs.ref }}-win7
-          name: ${{ needs.pre.outputs.ref }}-win7
+          tag_name: ${{ needs.pre.outputs.ref }}-${{ github.ref_name }}
+          name: ${{ needs.pre.outputs.ref }}-${{ github.ref_name }}
           target_commitish: ${{ github.ref }}
           body: |
             amneziawg ${{ needs.pre.outputs.ref }} compatible with Windows 7

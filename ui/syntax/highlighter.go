@@ -8,7 +8,12 @@
 
 package syntax
 
-import "unsafe"
+import (
+	"strconv"
+	"unsafe"
+
+	"github.com/amnezia-vpn/amneziawg-go/device"
+)
 
 type highlight int
 
@@ -33,10 +38,18 @@ const (
 	highlightJmax
 	highlightS1
 	highlightS2
+	highlightS3
+	highlightS4
 	highlightH1
 	highlightH2
 	highlightH3
 	highlightH4
+	highlightI1
+	highlightI2
+	highlightI3
+	highlightI4
+	highlightI5
+	highlightWarning
 	highlightError
 )
 
@@ -365,6 +378,24 @@ func (s stringSpan) isValidNetwork() bool {
 	return s.isValidIPv4() || s.isValidIPv6()
 }
 
+func (s stringSpan) isValidHField() bool {
+	for i := 0; i < s.len; i++ {
+		if *s.at(i) == '-' {
+			first := stringSpan{s.s, i}
+			second := stringSpan{s.at(i + 1), s.len - i - 1}
+			if first.isValidUint(false, 0, 2_147_483_647) && second.isValidUint(false, 0, 2_147_483_647) {
+				return true
+			}
+			return false
+		}
+	}
+	return s.isValidUint(false, 0, 2_147_483_647)
+}
+
+func (s stringSpan) isValidIField() bool {
+	return s.len != 0
+}
+
 type field int32
 
 const (
@@ -384,10 +415,17 @@ const (
 	fieldJmax
 	fieldS1
 	fieldS2
+	fieldS3
+	fieldS4
 	fieldH1
 	fieldH2
 	fieldH3
 	fieldH4
+	fieldI1
+	fieldI2
+	fieldI3
+	fieldI4
+	fieldI5
 	fieldPeerSection
 	fieldPublicKey
 	fieldPresharedKey
@@ -449,6 +487,10 @@ func (s stringSpan) field() field {
 		return fieldS1
 	case s.isCaselessSame("S2"):
 		return fieldS2
+	case s.isCaselessSame("S3"):
+		return fieldS3
+	case s.isCaselessSame("S4"):
+		return fieldS4
 	case s.isCaselessSame("H1"):
 		return fieldH1
 	case s.isCaselessSame("H2"):
@@ -457,6 +499,16 @@ func (s stringSpan) field() field {
 		return fieldH3
 	case s.isCaselessSame("H4"):
 		return fieldH4
+	case s.isCaselessSame("I1"):
+		return fieldI1
+	case s.isCaselessSame("I2"):
+		return fieldI2
+	case s.isCaselessSame("I3"):
+		return fieldI3
+	case s.isCaselessSame("I4"):
+		return fieldI4
+	case s.isCaselessSame("I5"):
+		return fieldI5
 	}
 	return fieldInvalid
 }
@@ -578,23 +630,37 @@ func (hsa *highlightSpanArray) highlightValue(parent, s stringSpan, section fiel
 	case fieldAddress, fieldDNS, fieldAllowedIPs:
 		hsa.highlightMultivalue(parent, s, section)
 	case fieldJc:
-		hsa.append(parent.s, s, validateHighlight(s.isValidUint(false, 0, 128), highlightJc))
+		hsa.append(parent.s, s, validateHighlight(s.isValidUint(false, 0, 65_535), highlightJc))
 	case fieldJmin:
-		hsa.append(parent.s, s, validateHighlight(s.isValidUint(false, 0, 1280), highlightJmin))
+		hsa.append(parent.s, s, validateHighlight(s.isValidUint(false, 0, 65_535), highlightJmin))
 	case fieldJmax:
-		hsa.append(parent.s, s, validateHighlight(s.isValidUint(false, 0, 1280), highlightJmax))
+		hsa.append(parent.s, s, validateHighlight(s.isValidUint(false, 0, 65_535), highlightJmax))
 	case fieldS1:
-		hsa.append(parent.s, s, validateHighlight(s.isValidUint(false, 0, 150), highlightS1))
+		hsa.append(parent.s, s, validateHighlight(s.isValidUint(false, 0, 65_535), highlightS1))
 	case fieldS2:
-		hsa.append(parent.s, s, validateHighlight(s.isValidUint(false, 0, 150), highlightS2))
+		hsa.append(parent.s, s, validateHighlight(s.isValidUint(false, 0, 65_535), highlightS2))
+	case fieldS3:
+		hsa.append(parent.s, s, validateHighlight(s.isValidUint(false, 0, 65_535), highlightS3))
+	case fieldS4:
+		hsa.append(parent.s, s, validateHighlight(s.isValidUint(false, 0, 65_535), highlightS4))
 	case fieldH1:
-		hsa.append(parent.s, s, validateHighlight(s.isValidUint(false, 0, 2_147_483_647), highlightH1))
+		hsa.append(parent.s, s, validateHighlight(s.isValidHField(), highlightH1))
 	case fieldH2:
-		hsa.append(parent.s, s, validateHighlight(s.isValidUint(false, 0, 2_147_483_647), highlightH2))
+		hsa.append(parent.s, s, validateHighlight(s.isValidHField(), highlightH2))
 	case fieldH3:
-		hsa.append(parent.s, s, validateHighlight(s.isValidUint(false, 0, 2_147_483_647), highlightH3))
+		hsa.append(parent.s, s, validateHighlight(s.isValidHField(), highlightH3))
 	case fieldH4:
-		hsa.append(parent.s, s, validateHighlight(s.isValidUint(false, 0, 2_147_483_647), highlightH4))
+		hsa.append(parent.s, s, validateHighlight(s.isValidHField(), highlightH4))
+	case fieldI1:
+		hsa.append(parent.s, s, validateHighlight(s.isValidIField(), highlightI1))
+	case fieldI2:
+		hsa.append(parent.s, s, validateHighlight(s.isValidIField(), highlightI2))
+	case fieldI3:
+		hsa.append(parent.s, s, validateHighlight(s.isValidIField(), highlightI3))
+	case fieldI4:
+		hsa.append(parent.s, s, validateHighlight(s.isValidIField(), highlightI4))
+	case fieldI5:
+		hsa.append(parent.s, s, validateHighlight(s.isValidIField(), highlightI5))
 	default:
 		hsa.append(parent.s, s, highlightError)
 	}
@@ -682,4 +748,66 @@ func highlightConfig(config string) []highlightSpan {
 		}
 	}
 	return ([]highlightSpan)(ret)
+}
+
+func highlightASecConfig(cfg string, spans []highlightSpan) {
+	const (
+		maxMTU  = 1500
+		diffMTU = 80
+	)
+
+	var (
+		mtu  = 0
+		jc   = 0
+		jmin = 0
+		jmax = 0
+	)
+
+	var err error
+
+	for i := range spans {
+		span := &spans[i]
+		switch span.t {
+		case highlightError:
+			return
+		case highlightMTU:
+			if mtu, err = strconv.Atoi(cfg[span.s : span.s+span.len]); err != nil {
+				return
+			}
+		case highlightJc:
+			if jc, err = strconv.Atoi(cfg[span.s : span.s+span.len]); err != nil {
+				return
+			}
+		case highlightJmin:
+			if jmin, err = strconv.Atoi(cfg[span.s : span.s+span.len]); err != nil {
+				return
+			}
+		case highlightJmax:
+			if jmax, err = strconv.Atoi(cfg[span.s : span.s+span.len]); err != nil {
+				return
+			}
+		}
+	}
+
+	if mtu == 0 {
+		mtu = device.DefaultMTU
+	}
+
+	for i := range spans {
+		span := &spans[i]
+		switch span.t {
+		case highlightJc:
+			if jc > 128 {
+				span.t = highlightWarning
+			}
+		case highlightJmin:
+			if (jc != 0 || jmin != 0 || jmax != 0) && (jmin >= jmax || jmin >= mtu+diffMTU || jmin >= maxMTU) {
+				span.t = highlightWarning
+			}
+		case highlightJmax:
+			if (jc != 0 || jmin != 0 || jmax != 0) && (jmax <= jmin || jmax > mtu+diffMTU || jmax > maxMTU) {
+				span.t = highlightWarning
+			}
+		}
+	}
 }

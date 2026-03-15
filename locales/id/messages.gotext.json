@@ -60,6 +60,12 @@
             ]
         },
         {
+            "id": "You must use the native version of AmneziaWG on this computer.",
+            "message": "You must use the native version of AmneziaWG on this computer.",
+            "translation": "Anda harus menggunakan AmneziaWG versi asli pada komputer ini.",
+            "translatorComment": "Copied from source."
+        },
+        {
             "id": "Unable to open current process token: {Err}",
             "message": "Unable to open current process token: {Err}",
             "translation": "Tidak dapat membuka token proses saat ini: {Err}",
@@ -76,9 +82,9 @@
             ]
         },
         {
-            "id": "WireGuard may only be used by users who are a member of the Builtin {AdminGroupName} group.",
-            "message": "WireGuard may only be used by users who are a member of the Builtin {AdminGroupName} group.",
-            "translation": "WireGuard hanya dapat digunakan oleh pengguna yang merupakan anggota grup Bawaan {AdminGroupName}.",
+            "id": "AmneziaWG may only be used by users who are a member of the Builtin {AdminGroupName} group.",
+            "message": "AmneziaWG may only be used by users who are a member of the Builtin {AdminGroupName} group.",
+            "translation": "AmneziaWG hanya dapat digunakan oleh pengguna yang merupakan anggota grup Bawaan {AdminGroupName}.",
             "translatorComment": "Copied from source.",
             "placeholders": [
                 {
@@ -92,9 +98,9 @@
             ]
         },
         {
-            "id": "WireGuard is running, but the UI is only accessible from desktops of the Builtin {AdminGroupName} group.",
-            "message": "WireGuard is running, but the UI is only accessible from desktops of the Builtin {AdminGroupName} group.",
-            "translation": "WireGuard sedang berjalan, tetapi UI hanya dapat diakses dari desktop grup Bawaan {AdminGroupName}.",
+            "id": "AmneziaWG is running, but the UI is only accessible from desktops of the Builtin {AdminGroupName} group.",
+            "message": "AmneziaWG is running, but the UI is only accessible from desktops of the Builtin {AdminGroupName} group.",
+            "translation": "AmneziaWG sedang berjalan, tetapi UI hanya dapat diakses dari desktop grup Bawaan {AdminGroupName}.",
             "translatorComment": "Copied from source.",
             "placeholders": [
                 {
@@ -108,9 +114,9 @@
             ]
         },
         {
-            "id": "WireGuard system tray icon did not appear after 30 seconds.",
-            "message": "WireGuard system tray icon did not appear after 30 seconds.",
-            "translation": "Ikon sistem WireGuard tidak muncul setelah 30 detik.",
+            "id": "AmneziaWG system tray icon did not appear after 30 seconds.",
+            "message": "AmneziaWG system tray icon did not appear after 30 seconds.",
+            "translation": "Ikon sistem AmneziaWG tidak muncul setelah 30 detik.",
             "translatorComment": "Copied from source."
         },
         {
@@ -475,6 +481,12 @@
             "translatorComment": "Copied from source."
         },
         {
+            "id": "Config key is missing an equals separator",
+            "message": "Config key is missing an equals separator",
+            "translation": "Kunci konfigurasi tidak valid, tidak memiliki pemisah dan sama dengan",
+            "translatorComment": "Copied from source."
+        },
+        {
             "id": "Key must have a value",
             "message": "Key must have a value",
             "translation": "Kunci harus memiliki value",
@@ -541,10 +553,78 @@
             "comment": "Text to insert between items when listing - most western languages will translate ‘[EnumerationSeparator]’ into ‘, ’ to produce lists like ‘apple, orange, strawberry’. Eastern languages might translate into ‘、’ to produce lists like ‘リンゴ、オレンジ、イチゴ’."
         },
         {
-            "id": "About WireGuard",
-            "message": "About WireGuard",
-            "translation": "Tentang WireGuard",
+            "id": "[UnitSeparator]",
+            "message": "[UnitSeparator]",
+            "translation": ", ",
+            "comment": "Text to insert when combining units of a measure - most languages will translate ‘[UnitSeparator]’ into ‘ ’ (space) to produce lists like ‘2 minuti 30 sekund’, or empty string ‘’ to produce ‘2分30秒’."
+        },
+        {
+            "id": "About AmneziaWG",
+            "message": "About AmneziaWG",
+            "translation": "Tentang AmneziaWG",
             "translatorComment": "Copied from source."
+        },
+        {
+            "id": "AmneziaWG logo image",
+            "message": "AmneziaWG logo image",
+            "translation": "Gambar logo AmneziaWG",
+            "translatorComment": "Copied from source."
+        },
+        {
+            "id": "App version: {Number}\nGo backend version: {WireGuardGoVersion}\nGo version: {Version_go}-{GOARCH}\nOperating system: {OsName}\nArchitecture: {NativeArch}",
+            "message": "App version: {Number}\nGo backend version: {WireGuardGoVersion}\nGo version: {Version_go}-{GOARCH}\nOperating system: {OsName}\nArchitecture: {NativeArch}",
+            "translation": "Versi Aplikasi: {Number}\nVersi back-end Go: {WireGuardGoVersion}\nVersi Go: {Version_go}--{GOARCH}\nSistem Operasi: {OsName}\nArsitektur: {NativeArch}",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Number",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "version.Number"
+                },
+                {
+                    "id": "WireGuardGoVersion",
+                    "string": "%[2]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 2,
+                    "expr": "device.WireGuardGoVersion"
+                },
+                {
+                    "id": "Version_go",
+                    "string": "%[3]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 3,
+                    "expr": "strings.TrimPrefix(runtime.Version(), \"go\")"
+                },
+                {
+                    "id": "GOARCH",
+                    "string": "%[4]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 4,
+                    "expr": "runtime.GOARCH"
+                },
+                {
+                    "id": "OsName",
+                    "string": "%[5]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 5,
+                    "expr": "version.OsName()"
+                },
+                {
+                    "id": "NativeArch",
+                    "string": "%[6]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 6,
+                    "expr": "version.NativeArch()"
+                }
+            ]
         },
         {
             "id": "Close",
@@ -562,6 +642,72 @@
             "id": "Status:",
             "message": "Status:",
             "translation": "Status:",
+            "translatorComment": "Copied from source."
+        },
+        {
+            "id": "&Deactivate",
+            "message": "&Deactivate",
+            "translation": "&Nonaktifkan",
+            "translatorComment": "Copied from source."
+        },
+        {
+            "id": "&Activate",
+            "message": "&Activate",
+            "translation": "&Aktifkan",
+            "translatorComment": "Copied from source."
+        },
+        {
+            "id": "Public key:",
+            "message": "Public key:",
+            "translation": "Kunci publik:",
+            "translatorComment": "Copied from source."
+        },
+        {
+            "id": "Listen port:",
+            "message": "Listen port:",
+            "translation": "Port Pendengar:",
+            "translatorComment": "Copied from source."
+        },
+        {
+            "id": "MTU:",
+            "message": "MTU:",
+            "translation": "MTU:",
+            "translatorComment": "Copied from source."
+        },
+        {
+            "id": "Addresses:",
+            "message": "Addresses:",
+            "translation": "Alamat:",
+            "translatorComment": "Copied from source."
+        },
+        {
+            "id": "DNS servers:",
+            "message": "DNS servers:",
+            "translation": "Server DNS:",
+            "translatorComment": "Copied from source."
+        },
+        {
+            "id": "Scripts:",
+            "message": "Scripts:",
+            "translation": "Skrip:",
+            "translatorComment": "Copied from source."
+        },
+        {
+            "id": "Preshared key:",
+            "message": "Preshared key:",
+            "translation": "Preshared key:",
+            "translatorComment": "Copied from source."
+        },
+        {
+            "id": "Allowed IPs:",
+            "message": "Allowed IPs:",
+            "translation": "IP yang diperbolehkan:",
+            "translatorComment": "Copied from source."
+        },
+        {
+            "id": "Endpoint:",
+            "message": "Endpoint:",
+            "translation": "Endpoint:",
             "translatorComment": "Copied from source."
         },
         {
@@ -643,9 +789,9 @@
             "translatorComment": "Copied from source."
         },
         {
-            "id": "&About WireGuard…",
-            "message": "&About WireGuard…",
-            "translation": "&Tentang WireGuard…",
+            "id": "&About AmneziaWG…",
+            "message": "&About AmneziaWG…",
+            "translation": "&Tentang AmneziaWG…",
             "translatorComment": "Copied from source."
         },
         {
@@ -687,15 +833,15 @@
             ]
         },
         {
-            "id": "WireGuard Detection Error",
-            "message": "WireGuard Detection Error",
-            "translation": "Deteksi eror WireGuard",
+            "id": "AmneziaWG Detection Error",
+            "message": "AmneziaWG Detection Error",
+            "translation": "Deteksi eror AmneziaWG",
             "translatorComment": "Copied from source."
         },
         {
-            "id": "Unable to wait for WireGuard window to appear: {Err}",
-            "message": "Unable to wait for WireGuard window to appear: {Err}",
-            "translation": "Tidak dapat menunggu jendela WireGuard muncul: {Err}",
+            "id": "Unable to wait for AmneziaWG window to appear: {Err}",
+            "message": "Unable to wait for AmneziaWG window to appear: {Err}",
+            "translation": "Tidak dapat menunggu jendela AmneziaWG muncul: {Err}",
             "translatorComment": "Copied from source.",
             "placeholders": [
                 {
@@ -709,9 +855,9 @@
             ]
         },
         {
-            "id": "WireGuard: Deactivated",
-            "message": "WireGuard: Deactivated",
-            "translation": "WireGuard: Dinonaktifkan",
+            "id": "AmneziaWG: Deactivated",
+            "message": "AmneziaWG: Deactivated",
+            "translation": "AmneziaWG: Dinonaktifkan",
             "translatorComment": "Copied from source."
         },
         {
@@ -745,15 +891,15 @@
             "translatorComment": "Copied from source."
         },
         {
-            "id": "WireGuard Tunnel Error",
-            "message": "WireGuard Tunnel Error",
-            "translation": "Wireguard Tunnel Eror",
+            "id": "AmneziaWG Tunnel Error",
+            "message": "AmneziaWG Tunnel Error",
+            "translation": "AmneziaWG Tunnel Eror",
             "translatorComment": "Copied from source."
         },
         {
-            "id": "WireGuard: {TextForStateglobalState_true}",
-            "message": "WireGuard: {TextForStateglobalState_true}",
-            "translation": "WireGuard: {TextForStateglobalState_true}",
+            "id": "AmneziaWG: {TextForStateglobalState_true}",
+            "message": "AmneziaWG: {TextForStateglobalState_true}",
+            "translation": "AmneziaWG: {TextForStateglobalState_true}",
             "translatorComment": "Copied from source.",
             "placeholders": [
                 {

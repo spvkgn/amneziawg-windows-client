@@ -27,7 +27,7 @@ jobs:
       - name: Prepare assets
         run: |
           foreach ($i in @('x86', 'amd64', 'arm64')) {
-            7z a -tzip amneziawg-$i.zip .\$i\amneziawg.exe .\installer\dist\amneziawg-$i-*.msi
+            7z a -tzip amneziawg_${{ github.ref_name }}-$i.zip .\$i\amneziawg.exe .\installer\dist\amneziawg-$i-*.msi
           }
 
       - name: Upload assets to release
@@ -40,7 +40,6 @@ jobs:
             AmneziaWG compatible with Windows 7
 
             * Built with go1.21.4 to make it possible to run on Windows 7
-            * Restore multiple simultaneous tunnels feature (from amnezia-vpn/amneziawg-windows-client#30)
 
             MSI installer files are unsigned and provided AS-IS.
-          files: amneziawg-*.zip
+          files: amneziawg*.zip
